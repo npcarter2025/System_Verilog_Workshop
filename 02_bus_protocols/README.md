@@ -1,3 +1,4 @@
+```
 02_bus_protocols/
 ├── system_buses/              # High-performance system interconnects
 │   ├── axi/
@@ -36,3 +37,5 @@
 └── automotive/                # Automotive protocols
     ├── can/                   # CAN bus
     └── lin/                   # LIN bus
+
+```
