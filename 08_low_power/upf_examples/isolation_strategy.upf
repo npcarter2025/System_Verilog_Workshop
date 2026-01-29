@@ -1,0 +1,43 @@
+# Isolation Strategy UPF
+# Specifies isolation cells at power domain boundaries
+
+# Create power domains
+create_power_domain PD_TOP
+create_power_domain PD_CORE -elements {u_core}
+create_power_domain PD_PERIPH -elements {u_periph}
+
+# Isolation for PD_CORE outputs
+set_isolation iso_core_out \
+    -domain PD_CORE \
+    -applies_to outputs \
+    -isolation_signal iso_core_en \
+    -isolation_sense high \
+    -clamp_value 0 \
+    -location parent
+
+# Isolation for PD_PERIPH outputs
+set_isolation iso_periph_out \
+    -domain PD_PERIPH \
+    -applies_to outputs \
+    -isolation_signal iso_periph_en \
+    -isolation_sense high \
+    -clamp_value 0 \
+    -location parent
+
+# Isolation for specific signals
+set_isolation iso_interrupt \
+    -domain PD_PERIPH \
+    -elements {interrupt_signal} \
+    -isolation_signal iso_periph_en \
+    -isolation_sense high \
+    -clamp_value 0 \
+    -location parent
+
+# Isolation with latch
+set_isolation iso_data_latch \
+    -domain PD_CORE \
+    -elements {data_bus*} \
+    -isolation_signal iso_core_en \
+    -isolation_sense high \
+    -clamp_value latch \
+    -location parent

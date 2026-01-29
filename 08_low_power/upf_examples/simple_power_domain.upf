@@ -1,0 +1,56 @@
+# Simple UPF (Unified Power Format) Example
+# Defines basic power domains and supply network
+
+# Create power domains
+create_power_domain PD_TOP -include_scope
+
+create_power_domain PD_CORE \
+    -elements {u_core}
+
+create_power_domain PD_PERIPH \
+    -elements {u_periph}
+
+# Create supply ports
+create_supply_port VDD -direction in
+create_supply_port VSS -direction in
+
+# Create supply nets
+create_supply_net VDD -domain PD_TOP
+create_supply_net VSS -domain PD_TOP
+
+create_supply_net VDD_CORE -domain PD_CORE
+create_supply_net VSS_CORE -domain PD_CORE
+
+create_supply_net VDD_PERIPH -domain PD_PERIPH
+create_supply_net VSS_PERIPH -domain PD_PERIPH
+
+# Connect supply nets to ports
+connect_supply_net VDD -ports {VDD}
+connect_supply_net VSS -ports {VSS}
+
+# Create supply sets
+create_supply_set SS_TOP \
+    -function {power VDD} \
+    -function {ground VSS}
+
+create_supply_set SS_CORE \
+    -function {power VDD_CORE} \
+    -function {ground VSS_CORE}
+
+create_supply_set SS_PERIPH \
+    -function {power VDD_PERIPH} \
+    -function {ground VSS_PERIPH}
+
+# Associate supply sets with domains
+associate_supply_set SS_TOP -handle PD_TOP
+associate_supply_set SS_CORE -handle PD_CORE
+associate_supply_set SS_PERIPH -handle PD_PERIPH
+
+# Set domain supply nets
+set_domain_supply_net PD_CORE \
+    -primary_power_net VDD_CORE \
+    -primary_ground_net VSS_CORE
+
+set_domain_supply_net PD_PERIPH \
+    -primary_power_net VDD_PERIPH \
+    -primary_ground_net VSS_PERIPH

@@ -1,0 +1,31 @@
+# Retention Strategy UPF
+# Specifies state retention for power domains
+
+# Create power domains
+create_power_domain PD_TOP
+create_power_domain PD_CORE -elements {u_core}
+
+# Define retention strategy
+set_retention ret_core \
+    -domain PD_CORE \
+    -save_signal {save_core high} \
+    -restore_signal {restore_core high}
+
+# Retention for specific registers
+set_retention ret_state_regs \
+    -domain PD_CORE \
+    -elements {u_core/state_reg*} \
+    -save_signal {save_core high} \
+    -restore_signal {restore_core high}
+
+# Retention with separate control
+set_retention ret_config \
+    -domain PD_CORE \
+    -elements {u_core/config_reg*} \
+    -save_signal {save_config high} \
+    -restore_signal {restore_config high}
+
+# Always-on retention
+set_retention ret_always_on \
+    -domain PD_CORE \
+    -retention_supply_set SS_ALWAYS_ON

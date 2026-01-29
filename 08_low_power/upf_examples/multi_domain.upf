@@ -1,0 +1,48 @@
+# Multi-Domain UPF Example
+# Defines multiple power domains with different voltages
+
+# Create power domains
+create_power_domain PD_TOP
+create_power_domain PD_CPU -elements {u_cpu}
+create_power_domain PD_GPU -elements {u_gpu}
+create_power_domain PD_MEM -elements {u_memory}
+
+# Create supply ports
+create_supply_port VDD_HIGH -direction in
+create_supply_port VDD_LOW -direction in
+create_supply_port VSS -direction in
+
+# Create supply nets
+create_supply_net VDD_TOP -domain PD_TOP
+create_supply_net VSS_TOP -domain PD_TOP
+
+create_supply_net VDD_CPU -domain PD_CPU -reuse VDD_HIGH
+create_supply_net VSS_CPU -domain PD_CPU -reuse VSS
+
+create_supply_net VDD_GPU -domain PD_GPU -reuse VDD_LOW
+create_supply_net VSS_GPU -domain PD_GPU -reuse VSS
+
+create_supply_net VDD_MEM -domain PD_MEM -reuse VDD_HIGH
+create_supply_net VSS_MEM -domain PD_MEM -reuse VSS
+
+# Create power switches
+create_power_switch PSW_GPU \
+    -domain PD_GPU \
+    -output_supply_port {vout VDD_GPU} \
+    -input_supply_port {vin VDD_LOW} \
+    -control_port {ctrl sleep_gpu_n} \
+    -on_state {on vin {ctrl}}
+
+# Set isolation
+set_isolation iso_gpu \
+    -domain PD_GPU \
+    -isolation_signal iso_gpu_en \
+    -isolation_sense high \
+    -clamp_value 0 \
+    -location parent
+
+# Set level shifters
+set_level_shifter ls_gpu_to_cpu \
+    -domain PD_GPU \
+    -applies_to outputs \
+    -location automatic
