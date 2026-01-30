@@ -268,3 +268,139 @@ module test_polymorphism;
     end
 
 endmodule
+
+
+virtual class Animal;
+    string name;
+    int age;
+
+    function new(string n, int a);
+        name = n;
+        age = a;
+    endfunction
+
+    pure virtual function void make_sound();
+    pure virtual function void move();
+
+    function void display_info();
+        $display("%s is %0d years old", name, age);
+    endfunction
+endclass
+
+class Dog extends Animal;
+
+    function new(string n, int a);
+        super.new(n, a);
+    endfunction
+
+    function void make_sound();
+        $display("Woof");
+    endfunction
+
+    function void move();
+        $display("running");
+    endfunction
+endclass
+
+class Cat extends Animal;
+
+    function new(string n, int a);
+        super.new(n, a);
+    endfunction
+
+    function void make_sound();
+        $display("Meow");
+    endfunction
+
+    function void move();
+        $display("prowling");
+    endfunction
+endclass
+
+class Bird extends Animal;
+
+    function new(string n, int a);
+        super.new(n, a);
+    endfunction
+
+    function void make_sound();
+        $display("Chirp");
+    endfunction
+
+    function void move();
+        $display("flying");
+    endfunction
+endclass
+
+class Zoo;
+
+    Animal animals[$];
+
+    function new();
+    endfunction
+
+    function void add_animal(Animal a);
+        animals.push_back(a);
+    endfunction
+
+    function void all_make_sounds();
+        foreach (animals[i])
+            animals[i].make_sound();
+    endfunction
+
+    function void all_move();
+        foreach (animals[i])
+            animals[i].move();
+    endfunction
+
+    function void display_all();
+        foreach (animals[i])
+            animals[i].display_info();
+    endfunction
+
+    function int get_animal_count();
+        return animals.size();
+    endfunction
+endclass
+
+module Zoo_tb;
+    Zoo my_zoo;
+    Dog d1, d2, d3;
+    Cat c1, c2, c3;
+    Bird b1, b2, b3;
+
+    initial begin
+        d1 = new("d1", 1);
+        d2 = new("d2", 2);
+        d3 = new("d3", 3);
+
+        c1 = new("c1", 1);
+        c2 = new("c2", 2);
+        c3 = new("c3", 3);
+
+        b1 = new("b1", 1);
+        b2 = new("b2", 2);
+        b3 = new("b3", 3);
+        
+        my_zoo = new();
+        my_zoo.add_animal(b2);
+        my_zoo.add_animal(d1);
+        my_zoo.add_animal(d2);
+        my_zoo.add_animal(c2);
+        my_zoo.add_animal(d3);
+
+        my_zoo.add_animal(c1);
+        my_zoo.add_animal(b1);
+
+        $display("\n Zoo Size: %d", my_zoo.get_animal_count());
+
+        my_zoo.display_all();
+
+        my_zoo.all_make_sounds();
+        my_zoo.all_move();
+
+        $finish();
+
+    end
+
+endmodule

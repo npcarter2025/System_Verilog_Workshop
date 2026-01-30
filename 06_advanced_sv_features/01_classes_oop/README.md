@@ -255,6 +255,94 @@ endclass
 ### Challenge
 Add a `Zoo` class that manages an array of Animals and can make all animals perform actions.
 
+```
+class Zoo;
+    Animal animals[$];  // Dynamic queue to store animals
+    
+    function new();
+        // No parameters needed - empty zoo
+    endfunction
+    
+    // Add an animal to the zoo
+    function void add_animal(Animal a);
+        animals.push_back(a);
+        $display("Added %s to the zoo", a.name);
+    endfunction
+    
+    // Make all animals make their sounds
+    function void all_make_sounds();
+        $display("\n=== All Animals Making Sounds ===");
+        foreach(animals[i]) begin
+            $write("%s says: ", animals[i].name);
+            animals[i].make_sound();
+        end
+    endfunction
+    
+    // Make all animals move
+    function void all_move();
+        $display("\n=== All Animals Moving ===");
+        foreach(animals[i]) begin
+            $write("%s is ", animals[i].name);
+            animals[i].move();
+        end
+    endfunction
+    
+    // Display info about all animals
+    function void display_all_info();
+        $display("\n=== Zoo Animal Information ===");
+        foreach(animals[i]) begin
+            animals[i].display_info();
+        end
+    endfunction
+    
+    // Get the number of animals in the zoo
+    function int get_animal_count();
+        return animals.size();
+    endfunction
+    
+endclass
+
+// Testbench for Zoo
+module zoo_tb;
+    Zoo my_zoo;
+    Dog dog1, dog2;
+    Cat cat1;
+    Bird bird1;
+    
+    initial begin
+        $display("\n=== Zoo Management System ===\n");
+        
+        // Create the zoo
+        my_zoo = new();
+        
+        // Create animals
+        dog1 = new("Buddy", 5);
+        dog2 = new("Max", 3);
+        cat1 = new("Whiskers", 4);
+        bird1 = new("Tweety", 2);
+        
+        // Add animals to zoo
+        my_zoo.add_animal(dog1);
+        my_zoo.add_animal(dog2);
+        my_zoo.add_animal(cat1);
+        my_zoo.add_animal(bird1);
+        
+        $display("\nTotal animals in zoo: %0d", my_zoo.get_animal_count());
+        
+        // Display all animal information
+        my_zoo.display_all_info();
+        
+        // Make all animals perform actions (polymorphism in action!)
+        my_zoo.all_make_sounds();
+        my_zoo.all_move();
+        
+        $display("\n=== Zoo Test Complete ===\n");
+        $finish();
+    end
+    
+endmodule
+```
+
 ---
 
 ## Exercise 7: Encapsulation
