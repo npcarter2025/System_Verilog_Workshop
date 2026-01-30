@@ -17,6 +17,6 @@ log:
 	./simv -l sim.log
 
 clean:
-	rm -rf simv *.key *.daidir csrc
+	rm -rf simv *.key *.daidir csrc *.log
 
 .PHONY: compile run log clean
