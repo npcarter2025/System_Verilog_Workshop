@@ -1,0 +1,9 @@
+*.daidir
+*.log
+
+simv
+
+csrc
+
+*.key
+
