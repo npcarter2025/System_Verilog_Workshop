@@ -77,24 +77,113 @@ module ex1_3_arr;
             $display("  arr[%0d] = %0d", i, arr[i]);
 
 
-        $display("Total = %0d\n", sum());
+        $display("Total = %0d\n", sum(arr));
 
-        $display("Min = %0d\n", min());
+        $display("Min = %0d\n", min(arr));
     end
 
-    function int sum();
-        int total = 0;
-        for (int i = 0; i < arr.size(); i++) 
-            total += arr[i];
+    // function int sum();
+    //     int total = 0;
+    //     for (int i = 0; i < arr.size(); i++) 
+    //         total += arr[i];
 
-        return total;
-    endfunction
+    //     return total;
+    // endfunction
 
-    function int min();
-        int mn = 32'h7FFF_FFFF;
-        foreach (arr[i])
-            mn = (arr[i] < mn) ? arr[i] : mn;
-        return mn;
-    endfunction
+    // function int min();
+    //     int mn = 32'h7FFF_FFFF;
+    //     foreach (arr[i])
+    //         mn = (arr[i] < mn) ? arr[i] : mn;
+    //     return mn;
+    // endfunction
 
 endmodule
+
+function int sum(bit [31:0] arr[]);
+    int total = 0;
+    for (int i = 0; i < arr.size(); i++) 
+        total += arr[i];
+
+    return total;
+endfunction
+
+function int min(bit [31:0] arr[]);
+    int mn = 32'h7FFF_FFFF;
+    foreach (arr[i])
+        mn = (arr[i] < mn) ? arr[i] : mn;
+    return mn;
+endfunction
+
+
+module ex1_4_arr;
+    integer A[];
+    integer B[];
+
+    initial begin
+        A = new[10];
+        B = new[10];
+
+        foreach (A[i])
+            A[i] = i;
+        // Should be a deep Copy.
+        B = A;
+
+        foreach (A[i])
+            $display("A[%0d] = %0d", i, A[i]);
+        
+        foreach (B[i])
+            $display("B[%0d] = %0d", i, B[i]);
+
+        foreach (B[i])
+            B[i] = B[i]*2;
+        
+        $display("\n");
+        foreach (A[i])
+            $display("A[%0d] = %0d", i, A[i]);
+        $display("\n");
+        foreach (B[i])
+            $display("B[%0d] = %0d", i, B[i]);
+
+        $finish();
+
+    end
+
+endmodule
+
+module ex1_5_arr;
+    int arr[][];
+
+    int row, col;
+
+    initial begin
+
+        arr = new[4];
+        row = 0;
+        col = 0;
+        foreach (arr[i]) begin
+            arr[i] = new[3];
+            foreach(arr[i][j]) begin
+
+                arr[i][j] = (i+1) * (j+1);
+                $display("array[%0d][%0d] = %0d", i, j, arr[i][j]);
+
+            end
+        end
+
+        foreach (arr[i]) begin
+            $write("arr[%0d] = ", i);
+            foreach(arr[i][j]) begin
+                $write("%0d ", arr[i][j]);
+
+            end 
+            $display("");
+        end
+
+
+
+    end
+
+endmodule
+
+
+
