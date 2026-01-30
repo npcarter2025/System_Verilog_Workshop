@@ -229,10 +229,11 @@ endmodule
 
 
 module test_polymorphism;
-    vehicle vehicles[3];
+    vehicle vehicles[4];
+
     car c_temp;
     motorcycle m_temp;
-    
+    vehicle v_temp;
     initial begin
         $display("\n=== Testing Polymorphism ===\n");
         
@@ -247,6 +248,9 @@ module test_polymorphism;
         // Create another Car
         c_temp = new("Ford", 2022, 120, 4);
         vehicles[2] = c_temp;
+
+        v_temp = new("On_Foot", 1995, 5);
+        vehicles[3] = v_temp;
         
         $display("--- Demonstrating Polymorphism ---");
         $display("All objects stored in Vehicle[] array, but each calls its own display() method:\n");
